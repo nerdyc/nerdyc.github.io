@@ -1,0 +1,70 @@
+@media (min-width: 768px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  img#profile {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+body {
+  margin: 1em 1em 3em 1em;
+  font-family: 'Lato', sans-serif;
+}
+
+header {
+  margin-top: 2em;
+  margin-bottom: 2em
+}
+
+section {
+  font-size: 13pt;
+}
+
+section#about {
+  font-size: 15pt;
+}
+section#about p {
+  margin: 1em 0;
+}
+
+section h2 {
+  font-size: 17pt;
+  text-transform: uppercase;
+  color: #666;
+  text-align: center;
+  border-bottom: 1px solid #DDD;
+  padding: 1em 0;
+  margin-bottom: 1em;
+}
+
+section h3 {
+  font-size: 15pt;
+}
+
+span#acquired {
+  font-size: 9pt;
+}
+
+section p {
+  color: #333;
+}
+
+#profile {
+  border-radius: 240pt;
+}
+
+#work ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 1em 0;
+}
+
+#work ul li {
+  margin: 2em 0;
+}
+
