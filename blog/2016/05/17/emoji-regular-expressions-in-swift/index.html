@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Emoji Regular Expressions in Swift</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+    <link rel="stylesheet" href="/stylesheets/prism.css" />
+    <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+  </head>
+
+  <body class="blog blog_2016 blog_2016_05 blog_2016_05_17 blog_2016_05_17_emoji-regular-expressions-in-swift blog_2016_05_17_emoji-regular-expressions-in-swift_index">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+      <h2 id="article-header">
+        Emoji Regular Expressions in Swift<br />
+        <small>May 17 2016</small>
+      </h2>
+      
+      <p>I recently worked on a Swift project that required working with emoji characters. This is becoming pretty common — everybody ❤️s emoji!</p>
+
+<p>It was a huge pain in the ass. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
+
+<p></p>
+
+<p>So I made some, and I put them on GitHub for you! <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> provides regular expressions for finding emoji in Swift strings. It’s available via Cocoapods, Carthage, and the Swift Package Manager.</p>
+
+<p>But wait! I didn’t want to half-ass this. Emoji are complex, and change over time. How would I know if got them all? What truly defines whether an emoji is emoji? 🤔</p>
+
+<p>Unicode, of course! Instead of hand-coding the regular expressions, <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> derives them directly from <a href="http://www.unicode.org/Public/emoji/2.0/">the Unicode data files that define emoji</a> in the first place. This means the expressions are comprehensive, and easy to update in the future.</p>
+
+<p>Enjoy!</p>
+
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li>
+      <a class="btn btn-social-icon" href="https://twitter.com/nerdyc">
+        <span class="fa fa-twitter"></span>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-social-icon" href="https://www.linkedin.com/in/christianniles">
+        <span class="fa fa-linkedin"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="https://www.github.com/nerdyc">
+        <span class="fa fa-github"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="mailto:christian@nerdyc.com">
+        <span class="fa fa-envelope"></span>
+      </a>
+    </li>
+  </ul>
+  <p class="small text-muted">&copy; 2016 Christian Niles</p>
+</footer>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/prism.js"></script>
+  </body>
+</html>
