@@ -7,38 +7,39 @@
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Christian Niles</title>
-
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
-    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
-    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
-    <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
-    <link rel="stylesheet" href="/stylesheets/prism.css" />
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+<link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+<link rel="stylesheet" href="/stylesheets/prism.css" />
+<link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+
   </head>
 
   <body class="blog blog_archive blog_archive_index">
     <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <a class="navbar-brand navbar-brand-image" href="/">
-            <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
-          </a>
-          <a class="navbar-brand navbar-brand-title" href="/">
-            Christian Niles
-          </a>
-        </div>
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/blog/">Blog</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    
     <div class="container">
       <h4>2016</h4>
 <ul class="article-list list-unstyled">
@@ -47,9 +48,9 @@
   <h4 class="article-header">
     <a href="/blog/2016/05/17/emoji-regular-expressions-in-swift/">Emoji Regular Expressions in Swift</a>
   </h4>
-  <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️s emoji!</p>
+  <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️ emoji!</p>
 
-<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
+<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI!?!?”</p>
 
   <div class="continue-reading">
     <small><a href="/blog/2016/05/17/emoji-regular-expressions-in-swift/">Continue Reading →</a></small>
@@ -472,7 +473,13 @@ Grand Lake CO</p>
     </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/javascript/bootstrap.min.js"></script>
-    <script src="/javascript/prism.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/prism.js"></script>
+<script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    twemoji.parse(document.body);
+  }
+</script>
   </body>
 </html>

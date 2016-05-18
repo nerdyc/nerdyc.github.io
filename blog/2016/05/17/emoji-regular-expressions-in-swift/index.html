@@ -7,15 +7,15 @@
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Emoji Regular Expressions in Swift</title>
-
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
-    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
-    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
-    <link rel="stylesheet" href="/stylesheets/prism.css" />
-    <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+<link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+<link rel="stylesheet" href="/stylesheets/prism.css" />
+<link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+
   </head>
 
   <body class="full-article blog blog_2016 blog_2016_05 blog_2016_05_17 blog_2016_05_17_emoji-regular-expressions-in-swift blog_2016_05_17_emoji-regular-expressions-in-swift_index">
@@ -45,9 +45,9 @@
         <small>May 17 2016</small>
       </h2>
       
-      <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️s emoji!</p>
+      <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️ emoji!</p>
 
-<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
+<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI!?!?”</p>
 
 <p></p>
 
@@ -89,7 +89,13 @@
     </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/javascripts/bootstrap.min.js"></script>
-    <script src="/javascripts/prism.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/prism.js"></script>
+<script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    twemoji.parse(document.body);
+  }
+</script>
   </body>
 </html>

@@ -91,3 +91,8 @@ body.full-article .article-header {
 .continue-reading {
   margin-top: -0.5em;
 }
+
+img.emoji {
+  width: 16px;
+  height: 16px;
+}
