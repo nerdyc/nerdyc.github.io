@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Emoji Regular Expressions in Swift</title>
+    <title>Stop building horrible admin interfaces! Use SproutCore instead.</title>
 
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
   </head>
 
-  <body class="full-article blog blog_2016 blog_2016_05 blog_2016_05_17 blog_2016_05_17_emoji-regular-expressions-in-swift blog_2016_05_17_emoji-regular-expressions-in-swift_index">
+  <body class="full-article blog blog_2011 blog_2011_02 blog_2011_02_17 blog_2011_02_17_stop-building-horrible-admin-interfaces blog_2011_02_17_stop-building-horrible-admin-interfaces_index">
     <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -41,24 +41,23 @@
 </nav>
     <div class="container">
       <h2 class="article-header">
-        Emoji Regular Expressions in Swift<br />
-        <small>May 17 2016</small>
+        Stop building horrible admin interfaces! Use SproutCore instead.<br />
+        <small>Feb 17 2011</small>
       </h2>
       
-      <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️s emoji!</p>
+      <p>At pretty much every place I&rsquo;ve worked, the admin area of the site (that secret part of the site that only employees or investors get to see) is built using the same layout and UI conventions as the consumer-facing site. And without fail, they&rsquo;ve always sucked. They&rsquo;re downright awful, barely usable, internally inconsistent, horribly laid out, and confusing as hell.</p>
 
-<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
 
-<p></p>
 
-<p>So I made some, and I put them on GitHub for you! <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> provides regular expressions for finding emoji in Swift strings. It’s available via Cocoapods, Carthage, and the Swift Package Manager.</p>
+<p>They suck for two reasons. First, developers are too busy building consumer-facing features to make them good. It&rsquo;s way too easy to put off building proper maintenance and analytics tools when your actual customers are howling.</p>
 
-<p>But wait! I didn’t want to half-ass this. Emoji are complex, and change over time. How would I know if got them all? What truly defines whether an emoji is emoji? 🤔</p>
+<p>Secondly, to my main point, the use cases that drive the admin area rarely have much overlap with those that drive your consumer facing site. The admin area is for your fellow employees to get their jobs done, and the consumer site is for customers. Probably due to the lack of time available, developers and designers just cut and paste the consumer site&rsquo;s design patterns over to the admin area.</p>
 
-<p>Unicode, of course! Instead of hand-coding the regular expressions, <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> derives them directly from <a href="http://www.unicode.org/Public/emoji/2.0/">the Unicode data files that define emoji</a> in the first place. This means the expressions are comprehensive, and easy to update in the future.</p>
+<p>Stop it! Seriously. You&rsquo;re making your co-workers&rsquo; lives worse. For 8 hours a day, 5 days a week, they have to trudge through the shittiest code you&rsquo;ve ever written. The hangover they wake up with on Saturday kills their weekend, and then they have to come back and take it the following week. Don&rsquo;t do that to them. If appealing to shame or morality doesn&rsquo;t work for you, consider the productivity loss to your business caused by this crap.</p>
 
-<p>Enjoy!</p>
+<p>This is a completely avoidable situation these days, thanks to projects like <a href="http://sproutcore.com">SproutCore</a> that allow you to build pleasant, desktop-like interfaces quickly. Your server-side code will be simpler and easier to maintain, since the admin area will be mostly API-driven, and your consumer site will be better off without a crappy admin interface holding it back.</p>
 
+<p>Trust me, your co-workers are going to love you for this.</p>
       <footer class="text-center">
   <ul class="list-inline">
     <li>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Being Wrong and the Art of Writing Software</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+    <link rel="stylesheet" href="/stylesheets/prism.css" />
+    <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+  </head>
+
+  <body class="full-article blog blog_2011 blog_2011_01 blog_2011_01_05 blog_2011_01_05_being-wrong-and-the-art-of-writing-software blog_2011_01_05_being-wrong-and-the-art-of-writing-software_index">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+      <h2 class="article-header">
+        Being Wrong and the Art of Writing Software<br />
+        <small>Jan  5 2011</small>
+      </h2>
+      
+      <iframe src="http://player.vimeo.com/video/18393719?title=0&amp;byline=0&amp;portrait=0&amp;color=006666" width="400" height="225" frameborder="0"></iframe>
+
+<p>(via <a href="http://utnereader.tumblr.com/post/2610204313/poptech-kathryn-schulz-is-an-expert-on-being">utnereader</a> and <a href="http://poptech.tumblr.com/post/2609816444/kathryn-schulz-is-an-expert-on-being-wrong-the">poptech</a>):</p>
+
+<blockquote>
+<p><a href="http://poptech.org/popcasts/kathryn_schulz_being_wrong">Kathryn Schulz</a> is an expert on being wrong. The journalist and author of “<a href="http://www.amazon.com/Being-Wrong-Adventures-Margin-Error/dp/0061176044">Being Wrong: Adventures in the Margins of Error</a>,” says we make mistakes all the time. The trouble is that often times being wrong feels like being right. What’s more, we’re usually wrong about what it even means to make mistakes—and how it can lead to better ideas.</p>
+</blockquote>
+
+<p>This talk is probably the best way I could ever hope to explain what it&rsquo;s like to write software to a layperson, or at least how writing software changes your view of the world and yourself. It&rsquo;s also a great way to show why agile engineering teams work better than lone cowboy coders.</p>
+
+
+
+<p>To write software is to be wrong. It&rsquo;s not just that computers are anal about syntax, the problem you&rsquo;re solving is hard, or that the tools to write software suck. The act of converting your abstract ideas into precise working code shows you just how fuzzy and half-assed your idea really was. Like Schulz implores us to do, good programmers take being wrong as feedback on how to be right.</p>
+
+<p>When I first began writing software in high school, I remember spending most of my time convinced I was right and the computer must be wrong. I did silly things like testing whether the computer could properly perform addition, because clearly computers suck at math. But in every case, it was always my code that was wrong. Always. Once I got past thinking I was right and assuming I was wrong, writing software became dramatically easier.</p>
+
+<p>For those of you without time to watch the whole video, Schulz&rsquo; closes by providing an optimistic view of being wrong. Being wrong isn&rsquo;t the problem, she says, the problem is being convinced you&rsquo;re right. Just like with my programming skills, an internal conviction that you&rsquo;re right only gets in the way of achieving actual results. You don&rsquo;t learn from being right, you learn from being wrong.</p>
+
+<p>She implores us all to externalize the way we answer the question of whether we&rsquo;re right or not, just like a pilot has a co-pilot, an auto-pilot, a control tower, and an array of gauges and metrics to help him know whether he&rsquo;s flying correctly. Open-source is mentioned, along with democracy, as a system that can take decision-making away from a single person&rsquo;s conviction that he or she is right.</p>
+
+<p>Which brings me to agile software development, which I think is a better example of Schulz&rsquo; ideas than open-source. Agile software development is a set of methodologies for writing software that I believe have one thing in common. They all expect you to be wrong, all the time, and embrace it. Being wrong is fundamental to being agile, since you can&rsquo;t pivot quickly if you&rsquo;re not learning quickly, and you only learn by being wrong fast and often.</p>
+
+<p>The most fundamental way any software team decides whether its code is correct or not is by writing tests &ndash; code that tests the performance of other code. Agile teams differ in that they write their tests first, before the actual code to test is written. Tests written after code has been written simply echo back the same logic used to write the original code. They are not independent, and therefore the tests don&rsquo;t really help you externalize your code&rsquo;s correctness.</p>
+
+<p>Writing tests first is just the opposite. A test-first approach forces you to think about the problem first, uncover all the horrible edge cases, and determine what external criteria prove the code is correct, irrespective of how the code is written. And since the code isn&rsquo;t even written yet, the tests always begin in a failing state. They only pass when your code is done, and force you to continually run your tests as you write code. This keeps your mind close to the problem at hand, not some internalized sense of completion.</p>
+
+<p>Schulz&rsquo; also emphasizes the need for other people to help you find your mistakes. Doubters, adversaries, or just someone with a different approach or background than you. Whether it&rsquo;s a co-pilot, a rival, or just someone you want to impress, having others around helps us avoid telling ourselves that we&rsquo;re right. It also exposes us to other, perhaps better ideas.</p>
+
+<p>In this same vein, many agile software teams practice pair-programming. Two people sit at one computer and write software together, just like Schulz&rsquo; pilot and his co-pilot. Perhaps because of the stereotype of antisocial hackers, many people find the idea completely odd. Many, if not most, software developers are also horrified at this idea, since they are used to working alone, without anybody or any tests there to point out their mistakes. They think a pair&rsquo;s job is to sit there and judge you and tell you you&rsquo;re wrong.</p>
+
+<p>They&rsquo;re only half right. Your pair&rsquo;s job is definitely to tell you you&rsquo;re wrong, but that&rsquo;s only a problem if you haven&rsquo;t accepted that you&rsquo;re wrong all the time. At the end of her talk, Schulz quotes Richard Rorty: &ldquo;To accept our own fallibility is to embrace &lsquo;the permanent possibility of someone having a better idea.&rsquo;&rdquo; Good pairs should live by this quote, since pairing is fundamentally a collaborative, creative experience that exposes you to new ways of thinking, approaches you&rsquo;d never considered, as well as just a friend to pass the time with. Pairing only becomes nightmarish if you&rsquo;re pairing with someone too full of themselves to admit their mistakes, or too afraid of being wrong to share their ideas.</p>
+
+<p>Pairing and test-first development are together the core principles I believe form the highest art of software development. Testing alone, even when writing the tests first, can prove whether our hypothetical pilot can correctly land the plane, but they can&rsquo;t prove to you that he&rsquo;s landing at the right airport. Similarly, pairing without tests are like a pilot and a co-pilot flying together, but without any gauges to help them correct their shared assumptions. 
+Pairing and testing together prove that your code works as expected, as simply as possible, and solves the right problem.</p>
+
+<p>Fundamental to all agile principles and practices is the assumption that you&rsquo;re going to be wrong &ndash; dead wrong &ndash; and you&rsquo;ll need to develop practices that help you answer the question of whether you&rsquo;re right or not. I&rsquo;d highly recommend anybody watch Schulz&rsquo; talk, but software developers in particular.</p>
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li>
+      <a class="btn btn-social-icon" href="https://twitter.com/nerdyc">
+        <span class="fa fa-twitter"></span>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-social-icon" href="https://www.linkedin.com/in/christianniles">
+        <span class="fa fa-linkedin"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="https://www.github.com/nerdyc">
+        <span class="fa fa-github"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="mailto:christian@nerdyc.com">
+        <span class="fa fa-envelope"></span>
+      </a>
+    </li>
+  </ul>
+  <p class="small text-muted">&copy; 2016 Christian Niles</p>
+</footer>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/prism.js"></script>
+  </body>
+</html>

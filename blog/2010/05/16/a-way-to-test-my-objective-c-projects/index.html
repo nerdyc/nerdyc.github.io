@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>A way to test-drive my Objective-C projects!</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+    <link rel="stylesheet" href="/stylesheets/prism.css" />
+    <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+  </head>
+
+  <body class="full-article blog blog_2010 blog_2010_05 blog_2010_05_16 blog_2010_05_16_a-way-to-test-my-objective-c-projects blog_2010_05_16_a-way-to-test-my-objective-c-projects_index">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+      <h2 class="article-header">
+        A way to test-drive my Objective-C projects!<br />
+        <small>May 16 2010</small>
+      </h2>
+      
+      <p>I&rsquo;ve had an on-again off-again relationship with Objective-C and Cocoa. I wrote a artsy visualization in it that ended up in some museums, a rather crappy utility to transfer email between IMAP servers, and some other stuff.</p>
+
+<p>But I always became really frustrated with how hard it was to test drive any of this code. Granted, test-driving graphics and UI code can be hard, but I really love the clarity BDD process gives you when you&rsquo;re hacking something together. And so I eventually lost interest.</p>
+
+<p><strong>Enter MacRuby</strong>. It&rsquo;s now possible to use Ruby to test drive your Objective-C code, and I&rsquo;m loving it (mostly). Seriously, <a href="http://macruby.com/recipes/tdd-in-objective-c-with-macruby.html">go read this tutorial</a> and try it out.</p>
+
+
+
+<p>I used this method to develop <a href="http://github.com/nerdyc/Opal">an XML-Pull Parser in Objective-C called Opal</a> &ndash; something I&rsquo;ve long missed in both Objective-C and Ruby. Download it, and build the &lsquo;Test&rsquo; target to see how the specs run. The Build window doesn&rsquo;t open automatically, so you&rsquo;ll need to hit Command-Shift-B to open it.</p>
+
+<p><img src="/blog/2010/05/16/a-way-to-test-my-objective-c-projects/tumblr_l2j1iw6wFD1qz8pzc.png" alt=""/></p>
+
+<p>You&rsquo;ll see some failures there if you haven&rsquo;t installed the Bacon gem for MacRuby of course:</p>
+
+<pre><code>$ sudo macgem install bacon
+</code></pre>
+
+<p>I&rsquo;m using the tiny <a href="http://github.com/chneukirchen/bacon/">Bacon</a> library to spec my code because RSpec has trouble running under Ruby 1.9, which is the version MacRuby supports. RSpec 2.0 should fix this. You can also try out other ruby testing libraries of course, though Bacon is pretty good for what I need to do.</p>
+
+<p><strong>Caveats</strong></p>
+
+<p>While I&rsquo;m really happy that I&rsquo;m finally able to use a truer BDD workflow in an Objective-C environment, I&rsquo;m less happy with the interfaces I have to use. The specs are run during the XCode build process, so I have to pour through Bacon&rsquo;s output within a giant text window:</p>
+
+<p><img src="/blog/2010/05/16/a-way-to-test-my-objective-c-projects/tumblr_l2j10isf0C1qz8pzc.png" alt=""/></p>
+
+<p>It&rsquo;s not preventing me from getting stuff done, but I spend way more time pouring through this output than I should. There&rsquo;s also no way to click through to the spec failures, nor a way to run a single spec. I suspect the only way I&rsquo;d get this is if I roll my own command line interfaces, probably integrated with TextMate.</p>
+
+<p>Once last caveat. While MacRuby&rsquo;s been a very solid way to interface with the Objective-C runtime, it&rsquo;s actually not a very solid Ruby interpreter. That makes sense &ndash; they&rsquo;ve been focusing on the integration of the two languages more than shipping a Ruby interpreter. MacRuby 0.6 passes 85% of the RubySpecs, but I&rsquo;d still think twice before I started a MacRuby project with lots of Ruby code. Or I&rsquo;d use Cocoa or Foundation libraries where I could &ndash; like NSURLConnection over Net::HTTP for example.</p>
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li>
+      <a class="btn btn-social-icon" href="https://twitter.com/nerdyc">
+        <span class="fa fa-twitter"></span>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-social-icon" href="https://www.linkedin.com/in/christianniles">
+        <span class="fa fa-linkedin"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="https://www.github.com/nerdyc">
+        <span class="fa fa-github"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="mailto:christian@nerdyc.com">
+        <span class="fa fa-envelope"></span>
+      </a>
+    </li>
+  </ul>
+  <p class="small text-muted">&copy; 2016 Christian Niles</p>
+</footer>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/prism.js"></script>
+  </body>
+</html>

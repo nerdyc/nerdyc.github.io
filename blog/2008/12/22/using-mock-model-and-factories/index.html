@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Emoji Regular Expressions in Swift</title>
+    <title>Using mock_model and Factories &amp; Workers Together</title>
 
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
   </head>
 
-  <body class="full-article blog blog_2016 blog_2016_05 blog_2016_05_17 blog_2016_05_17_emoji-regular-expressions-in-swift blog_2016_05_17_emoji-regular-expressions-in-swift_index">
+  <body class="full-article blog blog_2008 blog_2008_12 blog_2008_12_22 blog_2008_12_22_using-mock-model-and-factories blog_2008_12_22_using-mock-model-and-factories_index">
     <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -41,24 +41,29 @@
 </nav>
     <div class="container">
       <h2 class="article-header">
-        Emoji Regular Expressions in Swift<br />
-        <small>May 17 2016</small>
+        Using mock_model and Factories &amp; Workers Together<br />
+        <small>Dec 22 2008</small>
       </h2>
       
-      <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️s emoji!</p>
+      <p>While refactoring some functional tests for a side project yesterday and came up with a simple but great pairing: <a href="http://kpumuk.info/rspec/useful-helpers-for-rspec-mocks/">mock_model</a> with a side of <a href="http://github.com/dfl/factories-and-workers/tree/master">Factories &amp; Workers</a>.</p>
 
-<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
 
-<p></p>
 
-<p>So I made some, and I put them on GitHub for you! <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> provides regular expressions for finding emoji in Swift strings. It’s available via Cocoapods, Carthage, and the Swift Package Manager.</p>
+<p><code class="language-ruby">mock_model</code> is an RSpec helper that stubs out many ActiveRecord methods to limit (but not totally remove) calls to the database. It has the conceptual benefit of isolating your tests from the database, but the practical benefit is much faster tests.</p>
 
-<p>But wait! I didn’t want to half-ass this. Emoji are complex, and change over time. How would I know if got them all? What truly defines whether an emoji is emoji? 🤔</p>
+<p>But I always hated providing a list of attributes to <code>mock_model</code>, like so:</p>
 
-<p>Unicode, of course! Instead of hand-coding the regular expressions, <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> derives them directly from <a href="http://www.unicode.org/Public/emoji/2.0/">the Unicode data files that define emoji</a> in the first place. This means the expressions are comprehensive, and easy to update in the future.</p>
+<p><code class="language-ruby">negative_aged_user = mock_model(User, :name =&gt; 'Foo', :age =&gt; -42)</code></p>
 
-<p>Enjoy!</p>
+<p>It just always seemed inelegant, because I only wanted to include attributes that were important to a specific test, but leaving out common attributes would create a cascading set of test failures. I actually really hate how much mocking and stubbing, in general, forces me to expose the internals of my code, rather than testing interfaces.</p>
 
+<p>Anyway, yesterday I realized that <a href="http://github.com/dfl/factories-and-workers/tree/master">Factories &amp; Workers</a> exposed a method <code class="language-ruby">valid_MODEL_attributes</code> along with <code class="language-ruby">create_MODEL</code> and <code class="language-ruby">build_MODEL</code>.</p>
+
+<p>So now, instead of including all the attributes all the time, I can just do this:</p>
+
+<p><code class="language-ruby">mock_model(User, valid_user_attributes(:age =&gt; -42))</code></p>
+
+<p>I&rsquo;ve taken this a bit further, and have written a helper method, <code class="language-ruby">mock_user</code>, which pairs nicely with Factories &amp; Workers&rsquo; <code class="language-ruby">create_user</code> and <code class="language-ruby">build_user</code> methods. Now I can use the same syntax for mocked models, or database-backed models. Yay!</p>
       <footer class="text-center">
   <ul class="list-inline">
     <li>

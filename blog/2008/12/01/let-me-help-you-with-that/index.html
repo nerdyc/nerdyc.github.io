@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Emoji Regular Expressions in Swift</title>
+    <title>Let Me Help You Out, Comcast</title>
 
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
   </head>
 
-  <body class="full-article blog blog_2016 blog_2016_05 blog_2016_05_17 blog_2016_05_17_emoji-regular-expressions-in-swift blog_2016_05_17_emoji-regular-expressions-in-swift_index">
+  <body class="full-article blog blog_2008 blog_2008_12 blog_2008_12_01 blog_2008_12_01_let-me-help-you-with-that blog_2008_12_01_let-me-help-you-with-that_index">
     <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -41,24 +41,31 @@
 </nav>
     <div class="container">
       <h2 class="article-header">
-        Emoji Regular Expressions in Swift<br />
-        <small>May 17 2016</small>
+        Let Me Help You Out, Comcast<br />
+        <small>Dec  1 2008</small>
       </h2>
       
-      <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️s emoji!</p>
+      <div class="figure"><figure>
+  <img src="/blog/2008/12/01/let-me-help-you-with-that/UMOKeYvLUgzppknvL7EMTvTMo1_500.png" alt="">
+</figure></div>
 
-<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
+    <p>A <em>huge</em> usability pet peeve of mine is when sites ask you to enter account numbers without dashes or spaces. This one is from <a href="http://www.comcast.com/">Comcast</a>&rsquo;s online account registration, but I&rsquo;ve seen them in plenty of places. It&rsquo;s practically a standard to tell you not to enter anything except the raw numbers.</p>
+    
 
-<p></p>
 
-<p>So I made some, and I put them on GitHub for you! <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> provides regular expressions for finding emoji in Swift strings. It’s available via Cocoapods, Carthage, and the Swift Package Manager.</p>
+<p>Account numbers often have dashes/spaces in them precisely because it makes them easier to read and verify. In fact, the bill which I was told to copy the account number from had spaces in it. Other numbers, like a <a href="http://www.usrecordsearch.com/ssn.htm">US Social Security Number</a> have an internal structure that also can tell you things like which state a number was generated in.</p>
 
-<p>But wait! I didn’t want to half-ass this. Emoji are complex, and change over time. How would I know if got them all? What truly defines whether an emoji is emoji? 🤔</p>
+<p><strong>There is no technical reason except laziness to forbid people to enter dashes.</strong> Your code already works for numbers without dashes, right? Let me help you out:</p>
 
-<p>Unicode, of course! Instead of hand-coding the regular expressions, <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> derives them directly from <a href="http://www.unicode.org/Public/emoji/2.0/">the Unicode data files that define emoji</a> in the first place. This means the expressions are comprehensive, and easy to update in the future.</p>
+<p>Ruby:<br/><code>account_number.gsub(/\D+/, '')</code></p>
 
-<p>Enjoy!</p>
+<p>PHP:<br/><code>preg_replace("/\\D+/", "", $account_number)</code></p>
 
+<p>Java:<br/><code>accountNumber.replaceAll("\\D+", "")</code></p>
+
+<p>Python:<br/><code>re.sub(r'\D+', '', account_number)</code></p>
+
+<p>Now you have no excuse, so STOP IT. It&rsquo;s getting annoying.</p>
       <footer class="text-center">
   <ul class="list-inline">
     <li>

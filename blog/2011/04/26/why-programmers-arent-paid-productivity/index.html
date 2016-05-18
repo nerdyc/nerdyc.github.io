@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Emoji Regular Expressions in Swift</title>
+    <title>Why programmers are not paid in proportion to their productivity</title>
 
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
   </head>
 
-  <body class="full-article blog blog_2016 blog_2016_05 blog_2016_05_17 blog_2016_05_17_emoji-regular-expressions-in-swift blog_2016_05_17_emoji-regular-expressions-in-swift_index">
+  <body class="full-article blog blog_2011 blog_2011_04 blog_2011_04_26 blog_2011_04_26_why-programmers-arent-paid-productivity blog_2011_04_26_why-programmers-arent-paid-productivity_index">
     <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -41,24 +41,23 @@
 </nav>
     <div class="container">
       <h2 class="article-header">
-        Emoji Regular Expressions in Swift<br />
-        <small>May 17 2016</small>
+        Why programmers are not paid in proportion to their productivity<br />
+        <small>Apr 26 2011</small>
       </h2>
       
-      <p>A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️s emoji!</p>
+      <blockquote style="padding: 0 1.5em">The romantic image of an über-programmer is someone who fires up Emacs, types like a machine gun, and delivers a flawless final product from scratch. A more accurate image would be someone who stares quietly into space for a few minutes and then says “Hmm. I think I’ve seen something like this before.”</blockquote>
 
-<p><strong>It was a huge pain in the ass</strong>. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo™. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI⁉️⁉️”</p>
+<p class="text-right">-- John Cook<br /><a href="http://www.johndcook.com/blog/2009/12/23/why-programmers-are-not-paid-in-proportion-to-their-productivity/">"Why programmers are not paid in proportion to their productivity"</a></p>
 
-<p></p>
+<p>
+I wouldn&rsquo;t correct a single word of this paragraph. It perfectly describes the difference between good and great developers.
+</p>
 
-<p>So I made some, and I put them on GitHub for you! <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> provides regular expressions for finding emoji in Swift strings. It’s available via Cocoapods, Carthage, and the Swift Package Manager.</p>
 
-<p>But wait! I didn’t want to half-ass this. Emoji are complex, and change over time. How would I know if got them all? What truly defines whether an emoji is emoji? 🤔</p>
 
-<p>Unicode, of course! Instead of hand-coding the regular expressions, <a href="https://github.com/nerdyc/SwiftEmoji">SwiftEmoji</a> derives them directly from <a href="http://www.unicode.org/Public/emoji/2.0/">the Unicode data files that define emoji</a> in the first place. This means the expressions are comprehensive, and easy to update in the future.</p>
+<p>I would elaborate a bit and say that great programmers also know when to STOP thinking, and begin trying things out. I&rsquo;ve seen and been in the case where more thinking simply won&rsquo;t solve a problem, and you&rsquo;ve got to roll up your sleeves, get dirty, and learn something.</p>
 
-<p>Enjoy!</p>
-
+<p>Another difference between good and great developers is the latter&rsquo;s willingness/insistence on refactoring their code. First drafts are rarely the best, it takes a dedication to rewriting the code a second or third time to get it great.</p>
       <footer class="text-center">
   <ul class="list-inline">
     <li>

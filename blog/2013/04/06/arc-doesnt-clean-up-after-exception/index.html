@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>ARC Doesn't Clean Up After an Exception</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+    <link rel="stylesheet" href="/stylesheets/prism.css" />
+    <link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+  </head>
+
+  <body class="full-article blog blog_2013 blog_2013_04 blog_2013_04_06 blog_2013_04_06_arc-doesnt-clean-up-after-exception blog_2013_04_06_arc-doesnt-clean-up-after-exception_index">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+      <h2 class="article-header">
+        ARC Doesn't Clean Up After an Exception<br />
+        <small>Apr  6 2013</small>
+      </h2>
+      
+      <p>I recently discovered that ARC does not clean up objects automatically when an exception is thrown, which was the cause of some strange test pollution in my specs.</p>
+
+
+
+<p>An example will best illustrate how this can happen. Here&rsquo;s a simple assertion method that raises an exception if an object is not an instance of a given class:</p>
+
+<pre><code class="language-objectivec">- (void)assertObject:(id)object isKindOfClass:(Class)class
+{
+    if (![object isKindOfClass:class])
+    {
+        [NSException raise:NSInternalInconsistencyException
+                  format:@"Expected %@, received %@",
+                           NSStringFromClass(class),
+                         NSStringFromClass([object class])];
+    }
+}
+</code></pre>
+
+<p>When the exception is thrown, <code class="language-objectivec">object</code> will leak. Here&rsquo;s why: ARC calls <code class="language-objectivec">retain</code> on all objects passed to your methods, and pairs them with a <code class="language-objectivec">release</code> when your method returns. But it doesn&rsquo;t call <code class="language-objectivec">release</code> if an exception occurs.</p>
+
+<p>This is not a bug. The ARC documentation <a href="http://clang.llvm.org/docs/AutomaticReferenceCounting.html#exceptions">explicitly states</a>:</p>
+
+<blockquote>
+  <p>By default in Objective C, ARC is not exception-safe for normal releases:</p>
+  
+  <ul><li><p>It does not end the lifetime of __strong variables when their 
+    scopes are abnormally terminated by an exception.</p></li>
+  <li><p>It does not perform releases which would occur at the end of a full-expression if that full-expression throws an
+  exception.</p></li>
+  </ul></blockquote>
+
+<p>The reasoning is that exceptions in Objective-C are reserved for very exceptional cases. They are not suitable for control flow or general error handling and typically signal that the app is about to crash.</p>
+
+<p>This assumption falls flat if you&rsquo;re running automated tests. As the <code class="language-objectivec">assertObject:isKindOfClass:</code> method implies, Objective-C testing frameworks typically do use exceptions for control flow. As a result, the default behavior can cause your tests to leak memory and cause test pollution.</p>
+
+<p>Luckily  there&rsquo;s a way to turn on ARC exception handling by providing the <code class="language-bash">-fobjc-arc-exceptions</code> flag when compiling. This ended up solving my obscure case of test pollution. If one test failed it would leak a global object and in turn cause others run after it to fail in strange ways.</p>
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li>
+      <a class="btn btn-social-icon" href="https://twitter.com/nerdyc">
+        <span class="fa fa-twitter"></span>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-social-icon" href="https://www.linkedin.com/in/christianniles">
+        <span class="fa fa-linkedin"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="https://www.github.com/nerdyc">
+        <span class="fa fa-github"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="mailto:christian@nerdyc.com">
+        <span class="fa fa-envelope"></span>
+      </a>
+    </li>
+  </ul>
+  <p class="small text-muted">&copy; 2016 Christian Niles</p>
+</footer>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/prism.js"></script>
+  </body>
+</html>

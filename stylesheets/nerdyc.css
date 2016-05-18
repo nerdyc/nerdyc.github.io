@@ -4,6 +4,22 @@ body {
   padding-bottom: 50px;
 }
 
+a:link {
+    color: #3F51B5;
+}
+
+a:visited {
+    color: #3F51B5;
+}
+
+a:hover {
+    color: #3F51B5;
+}
+
+a:active {
+    color: #6574C4;
+}
+
 @media (max-width: 767px) {
     body {
         padding-top: 150px;
@@ -47,14 +63,31 @@ body.index #profile {
   border-radius: 240pt;
 }
 
+body.index section h2 {
+  padding-bottom: 10px;
+  border-bottom: solid 1px #DDD;
+}
+
 body.index section ul li {
   margin: 2em 0;
+}
+
+.article-list li {
+  margin-bottom: 3em;
 }
 
 footer {
   margin: 2em 0;
 }
 
-#article-header {
+.article-header {
+  margin-bottom: 0.5em;
+}
+
+body.full-article .article-header {
   margin-bottom: 1em;
+}
+
+.continue-reading {
+  margin-top: -0.5em;
 }
