@@ -96,3 +96,18 @@ img.emoji {
   width: 16px;
   height: 16px;
 }
+
+h1 img.emoji {
+  width: 32px;
+  height: 32px;
+}
+
+h2 img.emoji {
+  width: 32px;
+  height: 32px;
+}
+
+h3 img.emoji {
+  width: 32px;
+  height: 32px;
+}

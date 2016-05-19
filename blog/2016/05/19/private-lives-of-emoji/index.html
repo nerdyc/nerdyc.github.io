@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>The Private Lives of Emoji</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+<link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+<link rel="stylesheet" href="/stylesheets/prism.css" />
+<link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+
+  </head>
+
+  <body class="full-article blog blog_2016 blog_2016_05 blog_2016_05_19 blog_2016_05_19_private-lives-of-emoji blog_2016_05_19_private-lives-of-emoji_index">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+      <h2 class="article-header">
+        The Private Lives of Emoji<br />
+        <small>May 19 2016</small>
+      </h2>
+      
+      <p>I <a href="/blog/2016/05/17/emoji-regular-expressions-in-swift/">recently posted</a> about the <a href="https://github.com/nerdyc/SwiftEmoji">Emoji regular expressions</a> I wrote in Swift. While writing that library, I got to know a lot about how Emoji work. Here’s a tell-all guide to what Emoji are like under the hood! 😳</p>
+
+<p></p>
+
+<h3 id="simple-emoji">Simple Emoji</h3>
+
+<p>Some Emoji are simple. They lead clean, practical lives and don’t more than a single Unicode code point. The Sparkles emoji (✨, <code>U+2728</code>) is one of these, just like the capital letter A (<code>U+0041</code>).</p>
+
+<p>Unicode places these in the “Emoji_Presentation” category, since these characters are always presented Emoji-style.</p>
+
+<h3 id="emoji-curious">Emoji-Curious</h3>
+
+<p>In contrast to the simple Emoji, some characters are Emoji-curious. They’re simple black-and-white characters most of the time, until “Variant Selector 16” (<code>U+FE0F</code>) shows up. When that happens, they come out of the Emoji closet.</p>
+
+<p>The Telephone character is one of these. It can be rendered old-school (☎, <code>U+260E</code>) or as an Emoji (☎️, <code>U+260E U+FEOF</code>). The only difference is the <code>U+FEOF</code>. There are way more of these than you’d think. For example, the digits 0 through 9 are all Emoji-curious (e.g. 0️⃣ through 9️⃣)!</p>
+
+<p>Unicode puts these conflicted characters in the “Emoji” category, WHICH IS SUPER CONFUSING. “Emoji” code points are actually not Emoji unless combined with another code point. “Emoji_Curious” is way more apt, IMHO.</p>
+
+<h3 id="section">👋👋🏻👋🏼👋🏽👋🏾👋🏿</h3>
+
+<p>Unicode did something similar when it added skin tones to Emoji. Instead of creating separate-but-equal Emoji for each skin tone, they add five skin-tone modifiers — called “Fitzpatrick Modifiers”.</p>
+
+<ul>
+  <li>👋 (<code>U+1F44B</code>)</li>
+  <li>👋🏻 (<code>U+1F44B U+1F3FB</code>)</li>
+  <li>👋🏼 (<code>U+1F44B U+1F3FC</code>)</li>
+  <li>👋🏽 (<code>U+1F44B U+1F3FD</code>)</li>
+  <li>👋🏾 (<code>U+1F44B U+1F3FE</code>)</li>
+  <li>👋🏿 (<code>U+1F44B U+1F3FF</code>)</li>
+</ul>
+
+<p>To change the skin tone, just change the modifier. Some differences really are just skin-deep 🤔.</p>
+
+<h3 id="freak-flag-emoji">Freak-Flag Emoji</h3>
+
+<p>Things get even more freaky-deaky with flag emoji. For example, the US flag (🇺🇸) is expressed as <code>U+1F1FA U+1F1F8</code>.</p>
+
+<p>Isn’t that clever!?! 😂</p>
+
+<p>Oh. You didn’t get the joke? Maybe it’d be funnier if you knew that Uruguay’s flag (🇺🇾) is <code>U+1F1FA U+1F1FE</code>.</p>
+
+<p>Did you notice that both characters start with <code>U+1F1FA</code>? and both countries’ names begin with U? <code>U+1F1FA</code> is the “Regional Indicator Symbol U”, <code>U+1F1F8</code> is “Regional Indicator Symbol S”, and `` is “Regional Indicator Symbol Y”.</p>
+
+<p>Instead of creating separate characters for each flag, the nerds at Unicode encoded them using the country’s 2-letter IANA country code (US for the United States, and UY is for Uruguay).</p>
+
+<h3 id="polyamorous-emoji">Polyamorous Emoji</h3>
+
+<p>And finally, some emoji <em>really</em> like combining with multiple other emoji. For example, 👨‍👩‍👧‍👦 is actually the combination of the following emoji:</p>
+
+<ul>
+  <li>👨 (<code>U+1F468</code>)</li>
+  <li>👩 (<code>U+1F469</code>)</li>
+  <li>👧 (<code>U+1F467</code>)</li>
+  <li>👦 (<code>U+1F466</code>)</li>
+</ul>
+
+<p>But you can’t make 👨‍👩‍👧‍👦 by simply typing in 👨👩👧👦. Each emoji needs to be combined with a Zero-Width Joiner (<code>U+0200D</code>). For this reason they’re known as ZWJ sequences.</p>
+
+<p>I don’t know about you, but when I figured this out I immediately thought I could create bespoke emoji, combining all kinds of Emoji. Unfortunately that’s not the case, at least on my Mac. You can’t even change the skin tone or the ordering of people in the family above.</p>
+
+<h3 id="section-1">👋</h3>
+
+<p>And that’s about all there is to being an Emoji! There are a couple other small gotchas, which you can learn about in the source code to <a href="https://github.com/nerdyc/SwiftEmoji">the Emoji regular expression library I wrote</a>.</p>
+
+
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li>
+      <a class="btn btn-social-icon" href="https://twitter.com/nerdyc">
+        <span class="fa fa-twitter"></span>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-social-icon" href="https://www.linkedin.com/in/christianniles">
+        <span class="fa fa-linkedin"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="https://www.github.com/nerdyc">
+        <span class="fa fa-github"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="mailto:christian@nerdyc.com">
+        <span class="fa fa-envelope"></span>
+      </a>
+    </li>
+  </ul>
+  <p class="small text-muted">&copy; 2016 Christian Niles</p>
+</footer>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/prism.js"></script>
+<script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    twemoji.parse(document.body);
+  }
+</script>
+  </body>
+</html>
