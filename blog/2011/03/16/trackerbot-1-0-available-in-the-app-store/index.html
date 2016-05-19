@@ -97,7 +97,18 @@
 <script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
 <script type="text/javascript">
   window.onload = function() {
-    twemoji.parse(document.body);
+    twemoji.parse(document.body, {
+        callback: function(icon, options, variant) {
+            switch ( icon ) {
+                case 'a9':      // © copyright
+                case 'ae':      // ® registered trademark
+                case '2122':    // ™ trademark
+                case '260e':    // telephone
+                    return false;
+            }
+            return ''.concat(options.base, options.size, '/', icon, options.ext);
+        }
+    });
   }
 </script>
   </body>
