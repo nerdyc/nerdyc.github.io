@@ -1,0 +1,286 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Testing Web Apps from End-to-End in Go</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+<link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+<link rel="stylesheet" href="/stylesheets/prism.css" />
+<link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+
+  </head>
+
+  <body class="full-article blog blog_2016 blog_2016_06 blog_2016_06_16 blog_2016_06_16_testing-web-apps-end-to-end-in-go blog_2016_06_16_testing-web-apps-end-to-end-in-go_index">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+      <h2 class="article-header">
+        Testing Web Apps from End-to-End in Go<br />
+        <small>Jun 16 2016</small>
+      </h2>
+      
+      <p>When I started my first Go project last fall – a web service backed by PostgreSQL – getting a test suite setup was my first priority. Since I had no clue how to write Go, I figured tests would be the best way to tell whether my code worked.</p>
+
+<p>Setting up a full integration test suite, running against a local test database, ended up being a big project in itself. Frameworks like Rails provide this out of the box, but the Go community eschews monolithic frameworks and embraces small, focused libraries. I've grown to appreciate that a lot, but it created a much steeper learning curve.</p>
+
+<p>This post shares how I write end-to-end integration tests in Go, with very little code. My tests run against a local PostgreSQL server, and make real HTTP calls to ensure that my services work as a whole.</p>
+
+<p></p>
+
+<h2 id="tldr">TL;DR</h2>
+
+<p>If you prefer to pick apart code instead of English, I've put together <a href="https://github.com/nerdyc/testable-golang-web-service">a complete working example on GitHub</a>. Use it to learn, or as a template for your own projects.</p>
+
+<p>Here's the gist of how it works:</p>
+
+<ul>
+  <li>
+    <p>The <code>test</code> sub-package contains shared test setup and helpers.</p>
+  </li>
+  <li>
+    <p>The <code>test.Env</code> type manages setting up and tearing down global test state, like the connection to PostgreSQL.</p>
+  </li>
+  <li>
+    <p>PostgreSQL is running locally (I use <a href="http://postgresapp.com">Postgres.app</a>), and located via the <code>DATABASE_URL</code> environment variable.</p>
+  </li>
+  <li>
+    <p>The <a href="https://github.com/mattes/migrate"><code>migrate</code></a> package by <a href="https://github.com/mattes">Matthias Kadenbach</a> is used to create a clean database before each test.</p>
+  </li>
+  <li>
+    <p>Go's <a href="https://golang.org/pkg/net/http/httptest/"><code>net/http/httptest</code></a> package provides a test HTTP server that runs the API code.</p>
+  </li>
+  <li>
+    <p>Test requests are made using standard HTTP.</p>
+  </li>
+</ul>
+
+<p>The rest of this post will go into more detail, and show how to write clear concise tests.</p>
+
+<h2 id="creating-the-test-environment">Creating The Test Environment</h2>
+
+<p>The very first challenge I faced was setting up all the dependencies shared by my tests:</p>
+
+<ul>
+  <li>
+    <p>A clean PostgreSQL test database.</p>
+  </li>
+  <li>
+    <p>An HTTP server running my code.</p>
+  </li>
+  <li>
+    <p>An API client to make requests to the test HTTP server.</p>
+  </li>
+</ul>
+
+<p>While I could figure out how to do each of these separately, I had no idea how to share this code easily between tests. Go's testing package is very minimal, and doesn't provide much support for setting up and tearing down test state. In other languages, I put shared code like this in a <code>TestCase</code> subclass of some sort. But there's nothing like that in Go.</p>
+
+<p>After much wrangling and refactoring, I ended up with a solution I really enjoy. All global setup is performed by a shared function, <code>test.SetupEnv()</code>, which returns a <code>test.Env</code> type. The <code>test.Env</code> provides all global test state, such as the database and the API client.</p>
+
+<p>Each test starts in a very common, predictable form (e.g. boilerplate):</p>
+
+<pre><code class="language-go">func Test_GetContactByEmail(t *testing.T) {
+  env := test.SetupEnv(t)
+  defer env.Close()
+  // ...
+}
+</code></pre>
+
+<p>The call <code>env.Close()</code> cleans up after the test. Without it, tests would get polluted and fail unexpectedly. Nobody likes that.</p>
+
+<h2 id="creating-the-test-database">Creating the Test Database</h2>
+
+<p>The <code>test.SetupEnv()</code> function is actually quite small (about 20 lines of code). The vast majority of that is spent setting up the database:</p>
+
+<p>Here's how that works:</p>
+
+<ul>
+  <li>
+    <p>The test database is located via the <code>DATABASE_URL</code> environment variable.</p>
+  </li>
+  <li>
+    <p>The database is cleaned and migrated using the <a href="https://github.com/mattes/migrate"><code>migrate</code></a> package.</p>
+  </li>
+  <li>
+    <p>Database migrations are written in pure SQL, located in the <code>db/migrations</code> directory.</p>
+  </li>
+</ul>
+
+<p>The code is actually short enough to reproduce here:</p>
+
+<pre><code class="language-go">// SetupDB initializes a test database, performing all migrations.
+func SetupDB(t *testing.T) *service.Database {
+  databaseUrl := os.Getenv("DATABASE_URL")
+  require.NotEmpty(t, databaseUrl, "DATABASE_URL must be set!")
+
+  allErrors, ok := migrate.ResetSync(databaseUrl, "./db/migrations")
+  require.True(t, ok, "Failed to migrate database %v", allErrors)
+
+  db, err := sql.Open("postgres", databaseUrl)
+  require.NoError(t, err, "Error opening database")
+
+  return &amp;service.Database{db}
+}
+</code></pre>
+
+<h2 id="setting-up-a-test">Setting Up a Test</h2>
+
+<p>Most tests require some setup specific to that test. For example, before fetching a Contact from the API can be tests, a Contact needs to be setup first.</p>
+
+<p>The <code>test.Env</code> type is a great place to put helpers for setting up things like this. For example:</p>
+
+<pre><code class="language-go">func Test_GetContactByEmail(t *testing.T) {
+  env := test.SetupEnv(t)
+  defer env.Close()
+
+  // SETUP:
+  env.SetupContact("alice@example.xyz", "Alice Zulu")
+  
+  // TEST: ...
+  
+  // VERIFY: ...
+}
+</code></pre>
+
+<p>Take a lot of care, and write good test helpers. Whenever I find myself avoiding writing a test, it's usually because setting up the test is too difficult. Good test helpers make all the difference.</p>
+
+<p>I also divide my tests into three distinct steps – "Setup", "Test", and "Verify". This makes it obvious what code is setting up the test, and what code is running the test.</p>
+
+<h2 id="making-api-requests">Making API Requests</h2>
+
+<p>Making HTTP requests is the only way to test that a web service works end-to-end. The first tests I wrote used the <code>net/http</code> package directly to make requests. They quickly became repetitive and verbose. Each test was like a tiny API client.</p>
+
+<p>So instead of duplicating that API code, I extracted it into a reusuable API Client. It's set it up as part of the <code>test.Env</code>, like any other global. A side benefit is that this client could be used outside tests as well!</p>
+
+<p>Using the <code>Client</code> interface, making an API request works like this:</p>
+
+<pre><code class="language-go">func Test_GetContactByEmail(t *testing.T) {
+  env := test.SetupEnv(t)
+  defer env.Close()
+
+  // SETUP:
+  env.SetupContact("alice@example.xyz", "Alice Zulu")
+  
+  // TEST: When the contact doesn't exist
+  contact, err := env.Client.GetContactByEmail("bob@example.xyz")
+  
+  // VERIFY: ...
+}
+</code></pre>
+
+<p>Any other test or test helper can now reuse the same API code!</p>
+
+<h2 id="verifying-api-responses">Verifying API Responses</h2>
+
+<p>After making a request, we want to assert that the response is what we expect.</p>
+
+<p>The Go <code>testing</code> package doesn't provide any helpers for making test assertions. You're expected to use an <code>if</code> statement, and then call <code>testing.Fail()</code>. That's too austere for my taste. I found it made my tests redundant and hard to read.</p>
+
+<p>I highly recommend the <a href="https://github.com/stretchr/testify"><code>testify</code></a> package. It provides many useful assertions that save you time and code. It's excellent.</p>
+
+<p>Here's an example of a full test using a <code>test.Env</code> and <code>testify</code> assertions:</p>
+
+<pre><code class="language-go">func Test_GetContactByEmail(t *testing.T) {
+  env := test.SetupEnv(t)
+  defer env.Close()
+
+  // SETUP:
+  env.SetupContact("alice@example.xyz", "Alice Zulu")
+  
+  // TEST: When the contact doesn't exist
+  contact, err := env.Client.GetContactByEmail("bob@example.xyz")
+
+  // VERIFY: 404 Not Found returned
+  require.Error(t, err)
+  require.IsType(t, service.ErrorResponse{}, err)
+
+  assert.Equal(t, http.StatusNotFound, err.(service.ErrorResponse).StatusCode)
+
+  assert.Nil(t, contact)
+}
+</code></pre>
+
+<p>Notice that there are two types of assertions. Some begin with <code>require</code>, while others begin with <code>assert</code>. Those that start with <code>require</code> will stop the test immediately if the assertion fails. This is incredibly useful when later assertions depend on earlier ones passing, as in the example.</p>
+
+<h2 id="thats-it">That's It!</h2>
+
+<p>And that's all there is to it. The hardest part was discovering how to organize test code to allow me to write clear, concise tests. Hopefully this post helps you do the same, without all the struggled that I went through.</p>
+
+<p><a href="https://github.com/nerdyc/testable-golang-web-service">The sample project on GitHub</a> will give you a clearer picture than any blog post. There are even more little tips in there. Please let me know if this has helped you!</p>
+
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li>
+      <a class="btn btn-social-icon" href="https://twitter.com/nerdyc">
+        <span class="fa fa-twitter"></span>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-social-icon" href="https://www.linkedin.com/in/christianniles">
+        <span class="fa fa-linkedin"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="https://www.github.com/nerdyc">
+        <span class="fa fa-github"></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="btn btn-social-icon" href="mailto:christian@nerdyc.com">
+        <span class="fa fa-envelope"></span>
+      </a>
+    </li>
+  </ul>
+  <p class="small text-muted">&copy; 2016 Christian Niles</p>
+</footer>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/prism.js"></script>
+<script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    twemoji.parse(document.body, {
+        callback: function(icon, options, variant) {
+            switch ( icon ) {
+                case 'a9':      // © copyright
+                case 'ae':      // ® registered trademark
+                case '2122':    // ™ trademark
+                case '260e':    // telephone
+                    return false;
+            }
+            return ''.concat(options.base, options.size, '/', icon, options.ext);
+        }
+    });
+  }
+</script>
+  </body>
+</html>
