@@ -227,6 +227,13 @@ func SetupDB(t *testing.T) *service.Database {
 
 <p>Notice that there are two types of assertions. Some begin with <code>require</code>, while others begin with <code>assert</code>. Those that start with <code>require</code> will stop the test immediately if the assertion fails. This is incredibly useful when later assertions depend on earlier ones passing, as in the example.</p>
 
+<h2 id="running-the-tests">Running the Tests</h2>
+
+<p>Tests are run via <code>go test</code>, just like any other Go project. The only difference is that we also need to provide the <code>DATABASE_URL</code>:</p>
+
+<pre><code class="language-bash">DATABASE_URL="postgres://username@localhost:5432/service_test?sslmode=disable" go test
+</code></pre>
+
 <h2 id="thats-it">That's It!</h2>
 
 <p>And that's all there is to it. The hardest part was discovering how to organize test code to allow me to write clear, concise tests. Hopefully this post helps you do the same, without all the struggled that I went through.</p>
