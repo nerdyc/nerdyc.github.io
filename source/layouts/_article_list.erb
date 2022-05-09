@@ -1,0 +1,5 @@
+<ul class="article-list list-unstyled">
+  <% articles.each do |current_article| %>
+    <li><%= partial "layouts/article_preview", :locals => { :current_article => current_article } %></li>
+  <% end %>
+</ul>

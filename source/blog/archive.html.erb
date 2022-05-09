@@ -1,0 +1,4 @@
+<% blog.articles.group_by { |a| a.date.strftime('%Y')}.each do |key, articles| %>
+<h4><%= key %></h4>
+<%= partial "layouts/article_list", :locals => { :articles => articles } %>
+<% end %>

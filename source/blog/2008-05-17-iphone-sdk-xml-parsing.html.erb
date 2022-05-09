@@ -1,0 +1,8 @@
+---
+title: iPhone SDK XML Parsing
+---
+<p>While doing some iPhone hacking tonight, I had to write some code to parse some XML documents, and noticed that neither NSXMLDocument or NSXMLParser were available in my local iPhone documentation set.</p>
+
+<p>I eventually discovered that the iPhone SDK does include support for event-based XML parsing via NSXMLParser, but not DOM-based parsing. This makes sense, but I&rsquo;m still not sure why NSXMLParser is missing from my documentation.</p>
+
+<p><a href="https://developer.apple.com/iphone/library/samplecode/SeismicXML/index.html">SeismicXML XML Parsing Example</a><br/><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/XMLParsing/XMLParsing.html">Event-Driven XML Programming Guide for Cocoa</a><br/><a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSXMLParser_Class/Reference/Reference.html">NSXMLParser Class Reference</a></p>
