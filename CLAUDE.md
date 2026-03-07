@@ -46,6 +46,3 @@ This is a [Hugo](https://gohugo.io/) static site (v0.157+).
 - Site-specific: `stylesheets/nerdyc.css`
 - Fonts: `fonts/` (Font Awesome + Glyphicon webfonts)
 
-**Legacy Middleman source** (`source/`):
-- The original Middleman 4 source is preserved for reference but is no longer used.
-- Safe to delete once the Hugo migration is confirmed working in production.
