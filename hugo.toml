@@ -9,6 +9,9 @@ date = ["date", ":filename"]
 [markup.goldmark.renderer]
 unsafe = true
 
+[markup.highlight]
+codeFences = false
+
 [permalinks]
   [permalinks.page]
     blog = "/blog/:year/:month/:day/:slug/"
