@@ -1,9 +1,0 @@
-source 'https://rubygems.org'
-gem 'middleman'
-gem 'middleman-livereload'
-gem "middleman-blog"
-gem "middleman-syntax"
-gem "redcarpet"
-gem "kramdown"
-gem "kramdown-parser-gfm"
-gem "nokogiri"
