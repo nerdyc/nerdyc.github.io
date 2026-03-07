@@ -10,7 +10,7 @@ date = ["date", ":filename"]
 unsafe = true
 
 [markup.highlight]
-codeFences = false
+noClasses = false
 
 [permalinks]
   [permalinks.page]
