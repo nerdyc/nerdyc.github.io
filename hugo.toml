@@ -1,0 +1,14 @@
+baseURL = 'https://nerdyc.com/'
+languageCode = 'en-us'
+title = 'Christian Niles'
+disableKinds = ["taxonomy", "term"]
+
+[frontmatter]
+date = ["date", ":filename"]
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[permalinks]
+  [permalinks.page]
+    blog = "/blog/:year/:month/:day/:slug/"

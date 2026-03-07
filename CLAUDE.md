@@ -4,43 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Gems are vendored in `vendor/`. Run Middleman via Bundler:
-
 ```bash
-# Start development server with live reload at http://localhost:4567
-bundle exec middleman server
+# Start development server with live reload at http://localhost:1313
+hugo server
 
-# Build static site to build/
-bundle exec middleman build
+# Build static site to public/
+hugo
 ```
 
 There are no tests and no linter configured for this project.
 
 ## Architecture
 
-This is a [Middleman 4](https://middlemanapp.com/) static site with the `middleman-blog` extension.
+This is a [Hugo](https://gohugo.io/) static site (v0.157+).
 
-**Layouts** (`source/layouts/`):
-- `layout.erb` — default layout (includes nav bar); used by blog posts and most pages
-- `homepage.erb` — layout for `index.html` only (no nav bar, just container + footer)
-- `article.erb` — layout for individual blog posts (wraps in `layout.erb` via nesting)
-- Partials: `_nav.erb`, `_article_list.erb`, `_article_preview.erb`, `_stylesheet_tags.erb`, `_script_tags.erb`
+**Layouts** (`layouts/`):
+- `_default/baseof.html` — base template (head, nav, container, footer, scripts); nav is hidden on homepage via `.IsHome`
+- `index.html` — homepage layout (overrides `main` block with `.Content`)
+- `blog/single.html` — individual blog post layout (title + date header, `full-article` body class)
+- `blog/list.html` — blog listing page (`/blog/`)
+- `blog/archive.html` — posts grouped by year (`/blog/archive/`)
+- Partials: `partials/head.html`, `partials/nav.html`, `partials/footer.html`, `partials/scripts.html`
 
-**Blog** (`source/blog/`):
-- Posts use filename convention `YYYY-MM-DD-slug.html.md` (Markdown) or `.html.erb` (ERB)
-- Blog prefix is `blog/`, accessible at `/blog/`
-- `index.html.erb` — recent posts listing; `archive.html.erb` — full archive
-- `config.rb` sets `blog.summary_length = nil` (no truncation) and disables day/month/tag pages
+**Content** (`content/`):
+- `_index.html` — homepage bio content
+- `blog/_index.md` — blog section index
+- `blog/archive.md` — archive page (uses `layout: archive`, `url: /blog/archive/`)
+- `blog/YYYY-MM-DD-slug.md` — Markdown posts (migrated from `.html.md`)
+- `blog/YYYY-MM-DD-slug.html` — HTML posts (migrated from `.html.erb`)
 
-**Key config** (`config.rb`):
-- Markdown engine: Kramdown with GFM input
-- `activate :directory_indexes` — generates `foo/index.html` for clean URLs
-- Homepage (`/index.html`) uses the `homepage` layout explicitly
-- Livereload active in development only
+**Key config** (`hugo.toml`):
+- Permalink format: `/blog/:year/:month/:day/:slug/` (matches legacy Middleman URLs)
+- Date extracted from filename prefix (`YYYY-MM-DD`) when not in frontmatter
+- `unsafe = true` Goldmark renderer (needed for raw HTML in `.html` posts)
+- Taxonomies disabled (no tag/category pages)
 
-**Stylesheets** (`source/stylesheets/`):
-- Bootstrap 3 (`bootstrap.min.css`)
-- Font Awesome (`font-awesome.min.css`)
-- Prism.js syntax highlighting (`prism.css`)
-- Site-specific: `nerdyc.css` (plain CSS, not compiled)
-- `_normalize.scss` is present but the main stylesheet pipeline uses plain CSS, not Sass compilation
+**Static assets** (`static/`):
+- Bootstrap 3 (`stylesheets/bootstrap.min.css`)
+- Font Awesome (`stylesheets/font-awesome.min.css`)
+- Prism.js syntax highlighting (`stylesheets/prism.css`, `javascripts/prism.js`)
+- Site-specific: `stylesheets/nerdyc.css`
+- Fonts: `fonts/` (Font Awesome + Glyphicon webfonts)
+
+**Legacy Middleman source** (`source/`):
+- The original Middleman 4 source is preserved for reference but is no longer used.
+- Safe to delete once the Hugo migration is confirmed working in production.

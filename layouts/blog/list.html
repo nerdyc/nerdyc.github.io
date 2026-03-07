@@ -1,0 +1,19 @@
+{{ define "main" }}
+<h2>Blog</h2>
+<ul class="article-list list-unstyled">
+{{ range .Pages }}
+<li>
+<article class="article-preview">
+  <small class="text-muted pull-right">{{ .Date.Format "Jan 2 2006" }}</small>
+  <h4 class="article-header">
+    <a href="{{ .Permalink }}">{{ .Title }}</a>
+  </h4>
+  {{ .Summary }}
+  <div class="continue-reading">
+    <small><a href="{{ .Permalink }}">Continue Reading →</a></small>
+  </div>
+</article>
+</li>
+{{ end }}
+</ul>
+{{ end }}
