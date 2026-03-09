@@ -15,3 +15,7 @@ noClasses = false
 [permalinks]
   [permalinks.page]
     blog = "/blog/:year/:month/:day/:slug/"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
