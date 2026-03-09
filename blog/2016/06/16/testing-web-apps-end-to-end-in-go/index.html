@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Testing Web Apps from End-to-End in Go</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+<link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="/stylesheets/bootstrap-social.css" />
+<link rel="stylesheet" href="/stylesheets/chroma.css" />
+<link rel="stylesheet" href="/stylesheets/nerdyc.css" />
+
+  </head>
+  <body class="full-article">
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-brand-image" href="/">
+        <img id="navbar-profile-image" src="/images/me.jpg" width="38" height="38" alt="Christian Niles" style="border-radius: 24px" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="/">
+        Christian Niles
+      </a>
+    </div>
+
+    
+    <div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="container">
+      
+<h2 class="article-header">
+  Testing Web Apps from End-to-End in Go<br />
+  <small>Jun 16 2016</small>
+</h2>
+<p>When I started my first Go project last fall &ndash; a web service backed by PostgreSQL &ndash; getting a test suite setup was my first priority. Since I had no clue how to write Go, I figured tests would be the best way to tell whether my code worked.</p>
+<p>Setting up a full integration test suite, running against a local test database, ended up being a big project in itself. Frameworks like Rails provide this out of the box, but the Go community eschews monolithic frameworks and embraces small, focused libraries. I&rsquo;ve grown to appreciate that a lot, but it created a much steeper learning curve.</p>
+<p>This post shares how I write end-to-end integration tests in Go, with very little code. My tests run against a local PostgreSQL server, and make real HTTP calls to ensure that my services work as a whole.</p>
+<h2 id="tldr">TL;DR</h2>
+<p>If you prefer to pick apart code instead of English, I&rsquo;ve put together <a href="https://github.com/nerdyc/testable-golang-web-service">a complete working example on GitHub</a>. Use it to learn, or as a template for your own projects.</p>
+<p>Here&rsquo;s the gist of how it works:</p>
+<ul>
+<li>
+<p>The <code>test</code> sub-package contains shared test setup and helpers.</p>
+</li>
+<li>
+<p>The <code>test.Env</code> type manages setting up and tearing down global test state, like the connection to PostgreSQL.</p>
+</li>
+<li>
+<p>PostgreSQL is running locally (I use <a href="http://postgresapp.com">Postgres.app</a>), and located via the <code>DATABASE_URL</code> environment variable.</p>
+</li>
+<li>
+<p>The <a href="https://github.com/mattes/migrate"><code>migrate</code></a> package by <a href="https://github.com/mattes">Matthias Kadenbach</a> is used to create a clean database before each test.</p>
+</li>
+<li>
+<p>Go&rsquo;s <a href="https://golang.org/pkg/net/http/httptest/"><code>net/http/httptest</code></a> package provides a test HTTP server that runs the API code.</p>
+</li>
+<li>
+<p>Test requests are made using standard HTTP.</p>
+</li>
+</ul>
+<p>The rest of this post will go into more detail, and show how to write clear concise tests.</p>
+<h2 id="creating-the-test-environment">Creating The Test Environment</h2>
+<p>The very first challenge I faced was setting up all the dependencies shared by my tests:</p>
+<ul>
+<li>
+<p>A clean PostgreSQL test database.</p>
+</li>
+<li>
+<p>An HTTP server running my code.</p>
+</li>
+<li>
+<p>An API client to make requests to the test HTTP server.</p>
+</li>
+</ul>
+<p>While I could figure out how to do each of these separately, I had no idea how to share this code easily between tests. Go&rsquo;s testing package is very minimal, and doesn&rsquo;t provide much support for setting up and tearing down test state. In other languages, I put shared code like this in a <code>TestCase</code> subclass of some sort. But there&rsquo;s nothing like that in Go.</p>
+<p>After much wrangling and refactoring, I ended up with a solution I really enjoy. All global setup is performed by a shared function, <code>test.SetupEnv()</code>, which returns a <code>test.Env</code> type. The <code>test.Env</code> provides all global test state, such as the database and the API client.</p>
+<p>Each test starts in a very common, predictable form (e.g. boilerplate):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">Test_GetContactByEmail</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">test</span><span class="p">.</span><span class="nf">SetupEnv</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">env</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>The call <code>env.Close()</code> cleans up after the test. Without it, tests would get polluted and fail unexpectedly. Nobody likes that.</p>
+<h2 id="creating-the-test-database">Creating the Test Database</h2>
+<p>The <code>test.SetupEnv()</code> function is actually quite small (about 20 lines of code). The vast majority of that is spent setting up the database:</p>
+<p>Here&rsquo;s how that works:</p>
+<ul>
+<li>
+<p>The test database is located via the <code>DATABASE_URL</code> environment variable.</p>
+</li>
+<li>
+<p>The database is cleaned and migrated using the <a href="https://github.com/mattes/migrate"><code>migrate</code></a> package.</p>
+</li>
+<li>
+<p>Database migrations are written in pure SQL, located in the <code>db/migrations</code> directory.</p>
+</li>
+</ul>
+<p>The code is actually short enough to reproduce here:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// SetupDB initializes a test database, performing all migrations.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">SetupDB</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="nx">service</span><span class="p">.</span><span class="nx">Database</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">databaseUrl</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;DATABASE_URL&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">require</span><span class="p">.</span><span class="nf">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">databaseUrl</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;DATABASE_URL must be set!&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">allErrors</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">migrate</span><span class="p">.</span><span class="nf">ResetSync</span><span class="p">(</span><span class="nx">databaseUrl</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;./db/migrations&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">require</span><span class="p">.</span><span class="nf">True</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;Failed to migrate database %v&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">allErrors</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">db</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">sql</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="s">&#34;postgres&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">databaseUrl</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">require</span><span class="p">.</span><span class="nf">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;Error opening database&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">service</span><span class="p">.</span><span class="nx">Database</span><span class="p">{</span><span class="nx">db</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h2 id="setting-up-a-test">Setting Up a Test</h2>
+<p>Most tests require some setup specific to that test. For example, before fetching a Contact from the API can be tests, a Contact needs to be setup first.</p>
+<p>The <code>test.Env</code> type is a great place to put helpers for setting up things like this. For example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">Test_GetContactByEmail</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">test</span><span class="p">.</span><span class="nf">SetupEnv</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">env</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// SETUP:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="p">.</span><span class="nf">SetupContact</span><span class="p">(</span><span class="s">&#34;alice@example.xyz&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;Alice Zulu&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// TEST: ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// VERIFY: ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Take a lot of care, and write good test helpers. Whenever I find myself avoiding writing a test, it&rsquo;s usually because setting up the test is too difficult. Good test helpers make all the difference.</p>
+<p>I also divide my tests into three distinct steps &ndash; &ldquo;Setup&rdquo;, &ldquo;Test&rdquo;, and &ldquo;Verify&rdquo;. This makes it obvious what code is setting up the test, and what code is running the test.</p>
+<h2 id="making-api-requests">Making API Requests</h2>
+<p>Making HTTP requests is the only way to test that a web service works end-to-end. The first tests I wrote used the <code>net/http</code> package directly to make requests. They quickly became repetitive and verbose. Each test was like a tiny API client.</p>
+<p>So instead of duplicating that API code, I extracted it into a reusuable API Client. It&rsquo;s set it up as part of the <code>test.Env</code>, like any other global. A side benefit is that this client could be used outside tests as well!</p>
+<p>Using the <code>Client</code> interface, making an API request works like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">Test_GetContactByEmail</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">test</span><span class="p">.</span><span class="nf">SetupEnv</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">env</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// SETUP:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="p">.</span><span class="nf">SetupContact</span><span class="p">(</span><span class="s">&#34;alice@example.xyz&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;Alice Zulu&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// TEST: When the contact doesn&#39;t exist</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">contact</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">env</span><span class="p">.</span><span class="nx">Client</span><span class="p">.</span><span class="nf">GetContactByEmail</span><span class="p">(</span><span class="s">&#34;bob@example.xyz&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// VERIFY: ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Any other test or test helper can now reuse the same API code!</p>
+<h2 id="verifying-api-responses">Verifying API Responses</h2>
+<p>After making a request, we want to assert that the response is what we expect.</p>
+<p>The Go <code>testing</code> package doesn&rsquo;t provide any helpers for making test assertions. You&rsquo;re expected to use an <code>if</code> statement, and then call <code>testing.Fail()</code>. That&rsquo;s too austere for my taste. I found it made my tests redundant and hard to read.</p>
+<p>I highly recommend the <a href="https://github.com/stretchr/testify"><code>testify</code></a> package. It provides many useful assertions that save you time and code. It&rsquo;s excellent.</p>
+<p>Here&rsquo;s an example of a full test using a <code>test.Env</code> and <code>testify</code> assertions:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">Test_GetContactByEmail</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">test</span><span class="p">.</span><span class="nf">SetupEnv</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">env</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// SETUP:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">env</span><span class="p">.</span><span class="nf">SetupContact</span><span class="p">(</span><span class="s">&#34;alice@example.xyz&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;Alice Zulu&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// TEST: When the contact doesn&#39;t exist</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">contact</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">env</span><span class="p">.</span><span class="nx">Client</span><span class="p">.</span><span class="nf">GetContactByEmail</span><span class="p">(</span><span class="s">&#34;bob@example.xyz&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// VERIFY: 404 Not Found returned</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">require</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">require</span><span class="p">.</span><span class="nf">IsType</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">service</span><span class="p">.</span><span class="nx">ErrorResponse</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusNotFound</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">.(</span><span class="nx">service</span><span class="p">.</span><span class="nx">ErrorResponse</span><span class="p">).</span><span class="nx">StatusCode</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nx">assert</span><span class="p">.</span><span class="nf">Nil</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">contact</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Notice that there are two types of assertions. Some begin with <code>require</code>, while others begin with <code>assert</code>. Those that start with <code>require</code> will stop the test immediately if the assertion fails. This is incredibly useful when later assertions depend on earlier ones passing, as in the example.</p>
+<h2 id="running-the-tests">Running the Tests</h2>
+<p>Tests are run via <code>go test</code>, just like any other Go project. The only difference is that we also need to provide the <code>DATABASE_URL</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">&#34;postgres://username@localhost:5432/service_test?sslmode=disable&#34;</span> go <span class="nb">test</span>
+</span></span></code></pre></div><h2 id="thats-it">That&rsquo;s It!</h2>
+<p>And that&rsquo;s all there is to it. The hardest part was discovering how to organize test code to allow me to write clear, concise tests. Hopefully this post helps you do the same, without all the struggled that I went through.</p>
+<p><a href="https://github.com/nerdyc/testable-golang-web-service">The sample project on GitHub</a> will give you a clearer picture than any blog post. There are even more little tips in there. Please let me know if this has helped you!</p>
+
+      <footer class="text-center">
+  <ul class="list-inline">
+    <li class="list-inline-item">
+      <a href="https://www.linkedin.com/in/christianniles">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+        </svg>
+      </a>
+    </li>
+
+    <li class="list-inline-item"></li>
+
+    <li class="list-inline-item p3">
+      <a href="https://www.github.com/nerdyc">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+    </li>
+
+    <li class="list-inline-item"></li>
+
+    <li class="list-inline-item p3">
+      <a href="/blog">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+          <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+          <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+          <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+        </svg>
+      </a>
+    </li>
+
+  </ul>
+</footer>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    twemoji.parse(document.body, {
+        callback: function(icon, options, variant) {
+            switch ( icon ) {
+                case 'a9':      
+                case 'ae':      
+                case '2122':    
+                case '260e':    
+                    return false;
+            }
+            return ''.concat(options.base, options.size, '/', icon, options.ext);
+        }
+    });
+  }
+</script>
+
+  </body>
+</html>

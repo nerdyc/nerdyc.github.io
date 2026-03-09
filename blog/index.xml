@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Christian Niles</title>
+    <link>https://nerdyc.com/blog/</link>
+    <description>Recent content in Blog on Christian Niles</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 08 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nerdyc.com/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SpellCaster -- Exploring alternative English spellings</title>
+      <link>https://nerdyc.com/blog/2026/03/08/spellcaster/</link>
+      <pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2026/03/08/spellcaster/</guid>
+      <description>&lt;p&gt;Today I wrote a fun little tool called &lt;a href=&#34;https://nerdyc.com/spellcaster/&#34;&gt;SpellCaster&lt;/a&gt; that allows you to try spelling English phonetically. I built a prototype of it years ago, but came back to it after reading &lt;a href=&#34;https://dannybate.com/book/&#34;&gt;Why Q Needs U, by Danny Bate&lt;/a&gt;. The book covers the history of the English alphabet as well as its arcane spelling rules. I&amp;rsquo;m sure everyone who has ever learned how to write English in the past 500 years has wondered exactly how this mess was created. And some have gone further and tried &lt;a href=&#34;https://en.wikipedia.org/wiki/English-language_spelling_reform&#34;&gt;to reform it&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Testing Web Apps from End-to-End in Go</title>
+      <link>https://nerdyc.com/blog/2016/06/16/testing-web-apps-end-to-end-in-go/</link>
+      <pubDate>Thu, 16 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2016/06/16/testing-web-apps-end-to-end-in-go/</guid>
+      <description>&lt;p&gt;When I started my first Go project last fall &amp;ndash; a web service backed by PostgreSQL &amp;ndash; getting a test suite setup was my first priority. Since I had no clue how to write Go, I figured tests would be the best way to tell whether my code worked.&lt;/p&gt;&#xA;&lt;p&gt;Setting up a full integration test suite, running against a local test database, ended up being a big project in itself. Frameworks like Rails provide this out of the box, but the Go community eschews monolithic frameworks and embraces small, focused libraries. I&amp;rsquo;ve grown to appreciate that a lot, but it created a much steeper learning curve.&lt;/p&gt;&#xA;&lt;p&gt;This post shares how I write end-to-end integration tests in Go, with very little code. My tests run against a local PostgreSQL server, and make real HTTP calls to ensure that my services work as a whole.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Private Lives of Emoji</title>
+      <link>https://nerdyc.com/blog/2016/05/19/private-lives-of-emoji/</link>
+      <pubDate>Thu, 19 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2016/05/19/private-lives-of-emoji/</guid>
+      <description>&lt;p&gt;I &lt;a href=&#34;https://nerdyc.com/blog/2016/05/17/emoji-regular-expressions-in-swift/&#34;&gt;recently posted&lt;/a&gt; about the &lt;a href=&#34;https://github.com/nerdyc/SwiftEmoji&#34;&gt;Emoji regular expressions&lt;/a&gt; I wrote in Swift. While writing that library, I got to know a lot about how Emoji work. Here’s a tell-all guide to what Emoji are like under the hood! 😳&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Emoji Regular Expressions in Swift</title>
+      <link>https://nerdyc.com/blog/2016/05/17/emoji-regular-expressions-in-swift/</link>
+      <pubDate>Tue, 17 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2016/05/17/emoji-regular-expressions-in-swift/</guid>
+      <description>&lt;p&gt;A recent Swift project required detecting emoji characters in various bits of text. This is becoming pretty common — everybody ❤️ emoji!&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;It was a huge pain in the ass&lt;/strong&gt;. Emoji are much trickier to work with than “normal” characters since they use all kinds of Unicode Voodoo. I kept thinking, “WHY ISN’T THERE JUST A TABLE-FLIPPIN’ REGULAR EXPRESSION FOR EMOJI!?!?”&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>ARC Doesn&#39;t Clean Up After an Exception</title>
+      <link>https://nerdyc.com/blog/2013/04/06/arc-doesnt-clean-up-after-exception/</link>
+      <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2013/04/06/arc-doesnt-clean-up-after-exception/</guid>
+      <description>&lt;p&gt;I recently discovered that ARC does not clean up objects automatically when an exception is thrown, which was the cause of some strange test pollution in my specs.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>NSIndexSet block enumeration gotcha</title>
+      <link>https://nerdyc.com/blog/2012/05/10/nsindexset-enumeration-gotcha/</link>
+      <pubDate>Thu, 10 May 2012 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2012/05/10/nsindexset-enumeration-gotcha/</guid>
+      <description>&lt;p&gt;If you use &lt;code class=&#34;language-objectivec&#34;&gt;NSIndexSet&lt;/code&gt;&amp;rsquo;s block enumerators in your iOS or Mac app code, you should beware of a bug I&amp;rsquo;ve encountered when using &lt;code class=&#34;language-objectivec&#34;&gt;[NSIndexSet enumerateIndexesInRange:options:block:]&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>My &#34;Lunch&#34; with Steve Jobs</title>
+      <link>https://nerdyc.com/blog/2011/08/26/my-lunch-with-steve-jobs/</link>
+      <pubDate>Fri, 26 Aug 2011 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2011/08/26/my-lunch-with-steve-jobs/</guid>
+      <description>&lt;p&gt;I freelanced much of my way through college, to pay bills, but also to get way more real-world exposure to technology. But I kept freelancing for a few years too many, and a couple years after college I really just wanted a real job again.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;My job search basically consisted of two options: Apple, or startups. My interviews at Apple went well. So well that I found myself driving down to Apple for an all-day interview, with a working lunch break at the cafeteria with a pair of VPs.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;As I sat down in the middle of the cafeteria with the VPs, I immediately got distracted. Steve Jobs, in full mock turtleneck regalia, had just walked past the window next to us. Perhaps a good omen? Well, at least something to add color to a day spent sitting in a room all day.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;The interview was just getting started when Steve decided to park himself and his friends at the table directly next to us. As in, close enough to bump into when I got up if I wasn&amp;rsquo;t careful. Gulp.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>TrackerBot 1.0 Available in the App Store!</title>
+      <link>https://nerdyc.com/blog/2011/03/16/trackerbot-1-0-available-in-the-app-store/</link>
+      <pubDate>Wed, 16 Mar 2011 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2011/03/16/trackerbot-1-0-available-in-the-app-store/</guid>
+      <description>&lt;p&gt;Yes, the wait is over and you can now &lt;a href=&#34;http://itunes.apple.com/us/app/trackerbot-pivotal-tracker/id423706643&#34;&gt;get a TrackerBot of your own&lt;/a&gt; in the App Store! &lt;a href=&#34;http://vulpinelabs.com/trackerbot&#34;&gt;TrackerBot&lt;/a&gt; is the only native app designed whole-heartedly for the iPad and iPhone, and it really shows. If you love your iPad as much as I do, and love &lt;a href=&#34;http://www.pivotaltrackr.com&#34;&gt;Pivotal Tracker&lt;/a&gt; just the same, &lt;a href=&#34;http://vulpinelabs.com/trackerbot&#34;&gt;TrackerBot&lt;/a&gt; is going to make your day.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&#34;http://itunes.apple.com/us/app/trackerbot-pivotal-tracker/id423706643&#34; title=&#34;View TrackerBot in the App Store&#34;&gt;&lt;img src=&#34;https://nerdyc.com/blog/2011/03/16/trackerbot-1-0-available-in-the-app-store/trackerbot-screenshot.png&#34; width=&#34;475&#34; height=&#34;409&#34;/&gt;&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pardon me while I blow your mind: Spherical Fried Eggs!</title>
+      <link>https://nerdyc.com/blog/2011/02/27/spherical-fried-eggs/</link>
+      <pubDate>Sun, 27 Feb 2011 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2011/02/27/spherical-fried-eggs/</guid>
+      <description>&lt;p&gt;I got an ebelskiver pan a year or two ago, thinking I&amp;rsquo;d make ebelskivers now and then, but really because I wanted to experiment with the funky pan. Sure you can make spherical pancakes in it, but what ELSE could be made in there? Cupcakes? Puddings?&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Or how about, SPHERICAL FRIED EGGS:&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://nerdyc.com/blog/2011/02/27/spherical-fried-eggs/IMG_1037.jpg&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Being Wrong and the Art of Writing Software</title>
+      <link>https://nerdyc.com/blog/2011/01/05/being-wrong-and-the-art-of-writing-software/</link>
+      <pubDate>Wed, 05 Jan 2011 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2011/01/05/being-wrong-and-the-art-of-writing-software/</guid>
+      <description>&lt;iframe src=&#34;http://player.vimeo.com/video/18393719?title=0&amp;amp;byline=0&amp;amp;portrait=0&amp;amp;color=006666&#34; width=&#34;400&#34; height=&#34;225&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;&#xA;&#xA;&lt;p&gt;(via &lt;a href=&#34;http://utnereader.tumblr.com/post/2610204313/poptech-kathryn-schulz-is-an-expert-on-being&#34;&gt;utnereader&lt;/a&gt; and &lt;a href=&#34;http://poptech.tumblr.com/post/2609816444/kathryn-schulz-is-an-expert-on-being-wrong-the&#34;&gt;poptech&lt;/a&gt;):&lt;/p&gt;&#xA;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://poptech.org/popcasts/kathryn_schulz_being_wrong&#34;&gt;Kathryn Schulz&lt;/a&gt; is an expert on being wrong. The journalist and author of “&lt;a href=&#34;http://www.amazon.com/Being-Wrong-Adventures-Margin-Error/dp/0061176044&#34;&gt;Being Wrong: Adventures in the Margins of Error&lt;/a&gt;,” says we make mistakes all the time. The trouble is that often times being wrong feels like being right. What’s more, we’re usually wrong about what it even means to make mistakes—and how it can lead to better ideas.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&#xA;&lt;p&gt;This talk is probably the best way I could ever hope to explain what it&amp;rsquo;s like to write software to a layperson, or at least how writing software changes your view of the world and yourself. It&amp;rsquo;s also a great way to show why agile engineering teams work better than lone cowboy coders.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How to fake the &#39;new&#39; operator in Ruby</title>
+      <link>https://nerdyc.com/blog/2011/01/05/faking-new-operator-in-ruby/</link>
+      <pubDate>Wed, 05 Jan 2011 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2011/01/05/faking-new-operator-in-ruby/</guid>
+      <description>&lt;p&gt;My friend Alejandro Crosa &lt;a href=&#34;http://twitter.com/alejandrocrosa/status/22818681243303938&#34;&gt;recently tweeted&lt;/a&gt; his wish that Ruby 1.9 include a &amp;lsquo;new&amp;rsquo; operator like in Javascript and many other programming languages:&lt;/p&gt;&#xA;&#xA;&lt;blockquote&gt;&#xA;@nerdyc @ikai I kinda like it too, if 1.9 makes &amp;ldquo;new Class&amp;rdquo; work then all my typical javascript errors will disappear&#xA;&lt;/blockquote&gt;&#xA;&#xA;&lt;p&gt;So I decided to show him&lt;a href=&#34;https://gist.github.com/767364&#34;&gt; how to reproduce the new operator using Ruby meta-programming&lt;/a&gt;! For non-nerds, or people new to Ruby who might actually use this in real world code &amp;ndash; THIS IS A JOKE.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>A way to test-drive my Objective-C projects!</title>
+      <link>https://nerdyc.com/blog/2010/05/16/a-way-to-test-my-objective-c-projects/</link>
+      <pubDate>Sun, 16 May 2010 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2010/05/16/a-way-to-test-my-objective-c-projects/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve had an on-again off-again relationship with Objective-C and Cocoa. I wrote a artsy visualization in it that ended up in some museums, a rather crappy utility to transfer email between IMAP servers, and some other stuff.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;But I always became really frustrated with how hard it was to test drive any of this code. Granted, test-driving graphics and UI code can be hard, but I really love the clarity BDD process gives you when you&amp;rsquo;re hacking something together. And so I eventually lost interest.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;strong&gt;Enter MacRuby&lt;/strong&gt;. It&amp;rsquo;s now possible to use Ruby to test drive your Objective-C code, and I&amp;rsquo;m loving it (mostly). Seriously, &lt;a href=&#34;http://macruby.com/recipes/tdd-in-objective-c-with-macruby.html&#34;&gt;go read this tutorial&lt;/a&gt; and try it out.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Experimenting with Pears and Cheese</title>
+      <link>https://nerdyc.com/blog/2009/01/02/experimenting-with-pears-and-cheese/</link>
+      <pubDate>Fri, 02 Jan 2009 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2009/01/02/experimenting-with-pears-and-cheese/</guid>
+      <description>&lt;p&gt;A few weeks ago I had the idea of shredding some parmesan on top of some pears for breakfast, but I didn&amp;rsquo;t have time to experiment with them much:&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://nerdyc.com/blog/2009/01/02/experimenting-with-pears-and-cheese/3091348646_3c73f8742b.jpg&#34; alt=&#34;Raw Pears and Parmesan&#34;/&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The 165-175 Degree Egg</title>
+      <link>https://nerdyc.com/blog/2008/08/31/the-165-degree-egg/</link>
+      <pubDate>Sun, 31 Aug 2008 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2008/08/31/the-165-degree-egg/</guid>
+      <description>&lt;p&gt;I don&amp;rsquo;t actually like eggs that much. When I do eat them, they are likely scrambled, and covered with hot sauce, and I&amp;rsquo;m probably hungover. Last weekend, I tried Eggs Florentine for the first time and barely ate half of it.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;But something intrigued me this morning after reading about &lt;a href=&#34;http://www.kottke.org/08/08/how-to-boil-an-egg&#34;&gt;the 65-degree egg on kottke.org&lt;/a&gt;. So I whipped out my thermometer, a big pot, and started experimenting:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>iPhone SDK XML Parsing</title>
+      <link>https://nerdyc.com/blog/2008/05/17/iphone-sdk-xml-parsing/</link>
+      <pubDate>Sat, 17 May 2008 00:00:00 +0000</pubDate>
+      <guid>https://nerdyc.com/blog/2008/05/17/iphone-sdk-xml-parsing/</guid>
+      <description>&lt;p&gt;While doing some iPhone hacking tonight, I had to write some code to parse some XML documents, and noticed that neither NSXMLDocument or NSXMLParser were available in my local iPhone documentation set.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;I eventually discovered that the iPhone SDK does include support for event-based XML parsing via NSXMLParser, but not DOM-based parsing. This makes sense, but I&amp;rsquo;m still not sure why NSXMLParser is missing from my documentation.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&#34;https://developer.apple.com/iphone/library/samplecode/SeismicXML/index.html&#34;&gt;SeismicXML XML Parsing Example&lt;/a&gt;&lt;br/&gt;&lt;a href=&#34;http://developer.apple.com/documentation/Cocoa/Conceptual/XMLParsing/XMLParsing.html&#34;&gt;Event-Driven XML Programming Guide for Cocoa&lt;/a&gt;&lt;br/&gt;&lt;a href=&#34;http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSXMLParser_Class/Reference/Reference.html&#34;&gt;NSXMLParser Class Reference&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
